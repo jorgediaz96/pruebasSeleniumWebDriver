@@ -31,6 +31,10 @@ class BasePage:
         dropdown = Select(self.wait_for_element(locator))
         dropdown.select_by_index(index)
 
+    def get_select_options(self, locator):
+        dropdown = Select(self.wait_for_element(locator))
+        return [option.text for option in dropdown.options]
+
     def select_element(self, locator):
         element = self.wait_for_element(locator)
         if not element.is_selected():
@@ -44,3 +48,6 @@ class BasePage:
     def hover_over_element(self, locator):
         element = self.wait_for_element(locator)
         ActionChains(self.driver).move_to_element(element).perform()
+
+    def reload_page(self):
+        self.driver.refresh()

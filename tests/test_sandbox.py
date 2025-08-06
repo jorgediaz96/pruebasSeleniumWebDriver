@@ -41,8 +41,60 @@ def test_boton_id_dinamico_cambiar_color_al_hacer_hover(sandbox_page):
     assert color_before_hover != color_after_hover
 
 
-@pytest.mark.sandbox
-@pytest.mark.regresion
 def test_elegir_checkbox(sandbox_page):
     sandbox_page.navigate_sandbox()
     sandbox_page.select_checkbox_with_label("Pizza")
+
+
+def test_elegir_radio_button(sandbox_page):
+    sandbox_page.navigate_sandbox()
+    sandbox_page.select_radio_button("No")
+
+
+def test_elegir_deporte_del_dropdown(sandbox_page):
+    sandbox_page.navigate_sandbox()
+    sandbox_page.select_deporte("Fútbol")
+
+
+def test_deporte_dropdown_options(sandbox_page):
+    sandbox_page.navigate_sandbox()
+    options = sandbox_page.get_deporte_dropdown_options()
+    expected_options = ["Seleccioná un deporte", "Fútbol", "Tennis", "Basketball"]
+
+    assert all(
+        option in options for option in expected_options
+    ), "No todas las opciones esperadas están presentes en el select"
+
+
+def test_popup_title(sandbox_page):
+    sandbox_page.navigate_sandbox()
+    sandbox_page.click_boton_popup()
+    popup_title_text = sandbox_page.get_popup_title_text()
+    expected_text = "Popup de ejemplo"
+
+    assert (
+        popup_title_text == expected_text
+    ), f"El texto del popup es incorrecto, se obtuvo '{popup_title_text}' en su lugar."
+
+
+def test_valor_celda_cambia_post_recarga(sandbox_page):
+    sandbox_page.navigate_sandbox()
+    valor_inicial = sandbox_page.get_celda_valor(2, 3)
+    sandbox_page.reload_page()
+    valor_post_recarga = sandbox_page.get_celda_valor(2, 3)
+
+    assert (
+        valor_inicial != valor_post_recarga
+    ), f"El valor de la celda no cambió después de la recarga; aún es '{valor_inicial}'."
+
+
+@pytest.mark.sandbox
+def test_valor_celda_cambia_post_recarga(sandbox_page):
+    sandbox_page.navigate_sandbox()
+    valor_inicial = sandbox_page.get_valor_celda_estatica(2, 3)
+    sandbox_page.reload_page()
+    valor_post_recarga = sandbox_page.get_valor_celda_estatica(2, 3)
+
+    assert (
+        valor_inicial == valor_post_recarga
+    ), f"El valor de la celda no cambió después de la recarga; aún es '{valor_inicial}'."
